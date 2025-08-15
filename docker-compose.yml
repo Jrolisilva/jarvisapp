@@ -69,12 +69,12 @@ services:
         limits:
           cpus: '0.2'
           memory: 50M
-  volumes:
-    mongo_data:
-      driver: local
+volumes:
+  mongo_data:
+    driver: local
 
-  networks:
-    rinha_network:
-      driver: bridge
-    payment-processor:
-      external: true
+networks:
+  rinha_network:
+    driver: bridge
+  payment-processor:
+    external: true
