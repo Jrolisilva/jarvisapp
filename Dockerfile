@@ -4,7 +4,7 @@ FROM ruby:3.1.0 AS base
 WORKDIR /app
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends build-essential libpq-dev \
+    apt-get install -y --no-install-recommends build-essential libpq-dev && \
     rm -rf /var/lib/apt/lists/*
 
 # Install gems and dependencies

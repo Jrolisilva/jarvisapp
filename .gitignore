@@ -1,0 +1,41 @@
+# Ignore Ruby artifacts
+*.gem
+*.rbc
+.bundle/
+vendor/bundle/
+log/
+tmp/
+coverage/
+.byebug_history
+.rspec
+
+# Ignore environment configs
+.env
+.env.*
+
+# Ignore Docker volumes and image artifacts
+*.pid
+*.tar
+*.log
+Dockerfile~
+docker-compose.override.yml
+.ruby-version
+.ruby-gemset
+
+# Ignore system files
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Ignore build/test artifacts
+.k6/
+rinha-test/results/
+.rinha_cache/
+spec/tmp/
+.rubocop-*
+
+# Ignore MongoDB data volume (if mapped locally)
+mongo_data/
+data/

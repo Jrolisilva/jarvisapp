@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'sinatra/base'
 require 'json'
-require '../services/processor'
+require_relative '../services/processor'
 
 class Jarvis < Sinatra::Base
   configure do

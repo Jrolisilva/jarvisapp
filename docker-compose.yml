@@ -4,7 +4,9 @@ services:
   # jarvisapp itself
   api01: &api
   # Instructing docker to build the ruby image from the Dockerfile in the current directory
-    image: jairolisilva/rinha-backend-2025-ruby-sinatra-jarvisapp
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: jarvisapp
     hostname: jarvisapp
     environment:
@@ -16,8 +18,6 @@ services:
       MAX_THREADS: '5'
       PORT: '4567'
       RACK_ENV: 'production'
-    ports:
-      - "4567:4567"
     depends_on:
       - mongo
     networks:
@@ -27,7 +27,7 @@ services:
       resources:
         limits:
           cpus: '0.6'
-          memory: 145M
+          memory: '145MB'
 
   api02:
     <<: *api
@@ -37,7 +37,7 @@ services:
       resources:
         limits:
           cpus: '0.6'
-          memory: 145M
+          memory: '145MB'
 
   nginx:
     image: nginx:latest
@@ -68,7 +68,7 @@ services:
       resources:
         limits:
           cpus: '0.2'
-          memory: 50M
+          memory: '256MB'
 volumes:
   mongo_data:
     driver: local

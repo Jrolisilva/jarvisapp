@@ -1,15 +1,15 @@
 # frozen_string_literal: true
+require 'concurrent-ruby'
 require_relative '../services/request'
 require_relative '../db/mongo_connection'
 
 module Services
   class Processor
-    include MongoConnection
       DEFAULT_TIMEOUT = 0.2
       FALLBACK_TIMEOUT = 0.1
       MAX_RETRIES = 5
 
-    def initialize
+    def initialize(queue)
       @queue = queue
       @collection = MongoConnection.instance.collection('payments')
       @default_timeout = ENV.fetch('DEFAULT_TIMEOUT', 0.2).to_f
@@ -18,9 +18,14 @@ module Services
     end
 
     def start
+      QUEUE = Concurrent::Array.new
       Thread.new do
         loop do
-          process_payment(@queue.pop)
+          payment = QUEUE.shift
+          process_payment(payment) if payment
+        rescue StandardError => e
+          puts "Error processing payment: #{e.message}"
+          next
         end
       end
     end

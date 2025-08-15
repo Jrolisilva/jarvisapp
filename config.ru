@@ -1,2 +1,5 @@
-require /app
-run App
+require_relative './app/jarvis'
+
+use Rack::Deflater
+
+run Jarvis

@@ -3,11 +3,11 @@ SHELL = /bin/bash
 
 processor.up:
 	@echo 'Initializing processor...'
-	@docker compose -f payment-processor/docker-compose.yml up -d --build
+	@docker compose -f ../rinha-de-backend-2025/payment-processor/docker-compose.yml up -d --build
 
 processor.down:
 	@echo 'Stopping processor...'
-	@docker compose -f payment-processor/docker-compose.yml down
+	@docker compose -f ../rinha-de-backend-2025/payment-processor/docker-compose.yml down
 
 jarvisapp.up:
 	@echo 'Initializing Jarvis app...'
@@ -18,4 +18,4 @@ jarvisapp.down:
 	@docker compose down
 
 rinha.test:
-	@k6 run rinha-test/rinha.js
+	@k6 run ../rinha-de-backend-2025/rinha-test/rinha.js
