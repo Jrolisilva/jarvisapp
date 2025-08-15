@@ -16,3 +16,6 @@ jarvisapp.up:
 jarvisapp.down:
 	@echo 'Stopping Jarvis app...'
 	@docker compose down
+
+rinha.test:
+	@k6 run rinha-test/rinha.js
