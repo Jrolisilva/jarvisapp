@@ -32,7 +32,7 @@ services:
   api02:
     <<: *api
     container_name: jarvisapp2
-    hostaname: jarvisapp2
+    hostname: jarvisapp2
     deploy:
       resources:
         limits:
