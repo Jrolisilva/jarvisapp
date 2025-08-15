@@ -1,0 +1,80 @@
+version: '3.8'
+
+services:
+  # jarvisapp itself
+  api01: &api
+  # Instructing docker to build the ruby image from the Dockerfile in the current directory
+    image: jairolisilva/rinha-backend-2025-ruby-sinatra-jarvisapp
+    container_name: jarvisapp
+    hostname: jarvisapp
+    environment:
+      MONGO_URL: "mongodb://mongo:27017/jarvisapp"
+      MONGO_DB: "jarvisapp"
+      MONGO_USER: "jarvisapp"
+      MONGO_PASSWORD: "jarvisapp"
+      WEB_CONCURRENCY: '2'
+      MAX_THREADS: '5'
+      PORT: '4567'
+      RACK_ENV: 'production'
+    ports:
+      - "4567:4567"
+    depends_on:
+      - mongo
+    networks:
+     - rinha_network
+     - payment-processor
+    deploy:
+      resources:
+        limits:
+          cpus: '0.6'
+          memory: 145M
+
+  api02:
+    <<: *api
+    container_name: jarvisapp2
+    hostaname: jarvisapp2
+    deploy:
+      resources:
+        limits:
+          cpus: '0.6'
+          memory: 145M
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "9999:9999"
+    depends_on:
+      - api01
+      - api02
+      - mongo
+    networks:
+      - rinha_network
+
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    hostname: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: jarvisapp
+      MONGO_INITDB_ROOT_PASSWORD: jarvisapp
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - rinha_network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 50M
+  volumes:
+    mongo_data:
+      driver: local
+
+  networks:
+    rinha_network:
+      driver: bridge
+    payment-processor:
+      external: true
