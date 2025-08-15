@@ -11,8 +11,8 @@ processor.down:
 
 jarvisapp.up:
 	@echo 'Initializing Jarvis app...'
-	@docker compose -f docker compose up -d
+	@docker compose up -d --build
 
 jarvisapp.down:
 	@echo 'Stopping Jarvis app...'
-	@docker compose -f docker compose down
+	@docker compose down
