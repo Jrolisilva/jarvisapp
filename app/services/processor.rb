@@ -1,20 +1,15 @@
-# frozen_string_literal: true
-require 'concurrent'
-require_relative '../services/request'
-require_relative '../db/mongo_connection'
-
 module Services
   class Processor
-      DEFAULT_TIMEOUT = 0.2
-      FALLBACK_TIMEOUT = 0.1
-      MAX_RETRIES = 5
+    DEFAULT_TIMEOUT = 0.2
+    FALLBACK_TIMEOUT = 0.1
+    MAX_RETRIES = 5
 
     def initialize(queue)
       @queue = queue
-      @collection = MongoConnection.instance.collection('payments')
-      @default_timeout = ENV.fetch('DEFAULT_TIMEOUT', 0.2).to_f
-      @fallback_timeout = ENV.fetch('FALLBACK_TIMEOUT', 0.1).to_f
-      @max_retries = ENV.fetch('MAX_RETRIES', 5).to_i
+      @collection = Mongoid.client(:default)[:payments]
+      @default_timeout = ENV.fetch('DEFAULT_TIMEOUT', DEFAULT_TIMEOUT).to_f
+      @fallback_timeout = ENV.fetch('FALLBACK_TIMEOUT', FALLBACK_TIMEOUT).to_f
+      @max_retries = ENV.fetch('MAX_RETRIES', MAX_RETRIES).to_i
     end
 
     def start
@@ -40,7 +35,7 @@ module Services
 
       @max_retries.times do |attempt|
         processor = attempt.even? ? primary : fallback
-        timeout = processror == primary ? @default_timeout : @fallback_timeout
+        timeout = processor == primary ? @default_timeout : @fallback_timeout
 
         puts "Attempt #{attempt + 1} for processor: #{processor} with timeout: #{timeout}"
         tried_times << processor

@@ -1,5 +1,6 @@
-require_relative './app/jarvis'
+# This file is used by Rack-based servers to start the application.
 
-use Rack::Deflater
+require_relative "config/environment"
 
-run Jarvis
+run Rails.application
+Rails.application.load_server
