@@ -40,18 +40,25 @@ module Services
         puts "Attempt #{attempt + 1} for processor: #{processor} with timeout: #{timeout}"
         tried_times << processor
         success = Services::Request.post(processor, payload, timeout)
-        break if success
+        if success
+          persist_result(payload, processor)
+          puts "Payment processed successfully with #{processor}"
+          break
+        else
+          puts "Payment processing failed with #{processor}"
+          if attempt < @max_retries - 1
+            puts "Retrying with #{fallback} after failure with #{processor}"
+          end
+        end
       end
-
-      persist_result(payload, tried_times, success)
     end
 
-    def persist_result(payload, tried_times, success)
+    def persist_result(payload, processor_used)
       @collection.insert_one({
-        payload: payload,
-        tried_times: tried_times,
-        status: success ? 'success' : 'failure',
-        created_at: Time.now.utc
+        correlation_id: payload[:correlationId],
+        processor_used: processor_used.to_s,
+        amount: payload[:amount],
+        requested_at: payload[:requestedAt],
       })
     end
   end
