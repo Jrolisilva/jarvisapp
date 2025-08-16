@@ -10,7 +10,23 @@ class MongoConnection
   attr_reader :client
 
   def initialize
-    @client = Mongo::Client.new(mongo_url, mongo_options)
+    retries = 5
+
+    begin
+      @client = Mongo::Client.new(mongo_url, mongo_options)
+
+      @client.database_names
+    rescue Mongo::Error, Errno::ECONNREFUSED => e
+      puts "Mongo not ready yet: #{e.message}"
+      retries -= 1
+      if retries > 0
+        sleep 2
+        retry
+      else
+        puts "Mongo connection failed after retries. Exiting..."
+        exit(1)
+      end
+    end
   end
 
   def collection(name)
@@ -20,14 +36,16 @@ class MongoConnection
   private
 
   def mongo_url
-    ENV.fetch('MONGO_URL') { 'mongodb://localhost:27017/jarvisapp' }
+    ENV.fetch('MONGO_URL') {
+      'mongodb://jarvisapp:jarvisapp@mongo:27017/jarvisapp?authSource=admin'
+    }
   end
 
   def mongo_options
     {
       database: ENV.fetch('MONGO_DB', 'jarvisapp'),
-      user: ENV['MONGO_USER'],
-      password: ENV['MONGO_PASSWORD'],
+      user: ENV['MONGO_INITDB_ROOT_USERNAME'],
+      password: ENV['MONGO_INITDB_ROOT_PASSWORD'],
       server_selection_timeout: 2,
       connect_timeout: 2,
       socket_timeout: 2

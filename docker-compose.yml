@@ -8,12 +8,12 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: jarvisapp
-    hostname: jarvisapp
+    hostname: jarvisapp1
     environment:
-      MONGO_URL: "mongodb://mongo:27017/jarvisapp"
+      MONGO_URL: mongodb://jarvisapp:jarvisapp@mongo:27017/jarvisapp?authSource=admin
       MONGO_DB: "jarvisapp"
-      MONGO_USER: "jarvisapp"
-      MONGO_PASSWORD: "jarvisapp"
+      MONGO_INITDB_ROOT_USERNAME: jarvisapp
+      MONGO_INITDB_ROOT_PASSWORD: jarvisapp
       WEB_CONCURRENCY: '2'
       MAX_THREADS: '5'
       PORT: '4567'
@@ -60,6 +60,7 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: jarvisapp
       MONGO_INITDB_ROOT_PASSWORD: jarvisapp
+      MONGO_URL: mongodb://jarvisapp:jarvisapp@mongo:27017/jarvisapp?authSource=admin
     volumes:
       - mongo_data:/data/db
     networks:

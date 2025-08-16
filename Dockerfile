@@ -18,4 +18,4 @@ COPY . .
 EXPOSE 3000
 
 # Start the application
-CMD ["bundle", "exec", "puma", "-b", "tcp://0.0.0.0:3000", "-C", "config/puma.rb"]
+CMD ["bundle", "exec", "puma", "-b", "tcp://0.0.0.0:3000" ]

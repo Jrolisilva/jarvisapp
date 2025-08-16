@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'concurrent-ruby'
+require 'concurrent'
 require_relative '../services/request'
 require_relative '../db/mongo_connection'
 
@@ -18,10 +18,10 @@ module Services
     end
 
     def start
-      QUEUE = Concurrent::Array.new
+      @queue = Concurrent::Array.new
       Thread.new do
         loop do
-          payment = QUEUE.shift
+          payment = @queue.shift
           process_payment(payment) if payment
         rescue StandardError => e
           puts "Error processing payment: #{e.message}"
