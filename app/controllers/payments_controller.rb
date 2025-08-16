@@ -1,6 +1,8 @@
+require 'concurrent'
+
 class PaymentsController < ApplicationController
-  QUEUE = Concurrent::Queue.new
-  PROCESSOR = Services::Processor.new(QUEUE).tap(&:start)
+  QUEUE = Concurrent::Array.new
+  PROCESSOR = ::Processor.new(QUEUE).tap(&:start)
 
   def create
     body = params.body.read

@@ -251,6 +251,7 @@ PLATFORMS
 DEPENDENCIES
   bootsnap
   brakeman
+  concurrent-ruby
   debug
   mongoid
   puma (>= 5.0)
