@@ -24,6 +24,6 @@ module Jarvisapp
     config.load_defaults 7.2
     config.autoload_lib(ignore: %w[assets tasks])
     config.api_only = true
-    Mongoid.load!('/.config/mongoid.yml')
+    Mongoid.load!('./config/mongoid.yml')
   end
 end
